@@ -85,3 +85,45 @@ public:
         deleteTree(root);
     }
     
+    void loadFromCSV(const string& filename) {
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error al abrir el archivo." << endl;
+            return;
+        }
+
+        string line;
+        getline(file, line);
+
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string field;
+
+            int id, age, id_father;
+            char gender;
+            bool is_dead, was_king, is_king;
+            string name, last_name;
+
+            getline(ss, field, ',');
+            id = stoi(field);
+            getline(ss, name, ',');
+            getline(ss, last_name, ',');
+            getline(ss, field, ',');
+            gender = field[0];
+            getline(ss, field, ',');
+            age = stoi(field);
+            getline(ss, field, ',');
+            id_father = stoi(field);
+            getline(ss, field, ',');
+            is_dead = stoi(field);
+            getline(ss, field, ',');
+            was_king = stoi(field);
+            getline(ss, field, ',');
+            is_king = stoi(field);
+
+            Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
+            insert(root, newPerson);
+        }
+
+        file.close();
+    }
