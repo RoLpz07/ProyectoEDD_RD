@@ -70,4 +70,11 @@ private:
         showLineOfSuccession(current->left);
         showLineOfSuccession(current->right);
     }
+
+    void deleteTree(Person* current) {
+        if (current == nullptr) return;
+        deleteTree(current->left);
+        deleteTree(current->right);
+        delete current;
+    }
     
