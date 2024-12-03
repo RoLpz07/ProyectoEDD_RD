@@ -77,4 +77,11 @@ private:
         deleteTree(current->right);
         delete current;
     }
+
+public:
+    RoyalFamilyTree() : root(nullptr) {}
+
+    ~RoyalFamilyTree() {
+        deleteTree(root);
+    }
     
