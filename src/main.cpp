@@ -54,3 +54,11 @@ private:
         return king;
     }
     
+    Person* findSuccessor(Person* current) {
+        if (current == nullptr) return nullptr;
+        if (!current->is_dead) return current;
+        Person* successor = findSuccessor(current->left);
+        if (successor == nullptr) successor = findSuccessor(current->right);
+        return successor;
+    }
+    
