@@ -154,3 +154,13 @@ public:
         }
     }
 };
+
+int main() {
+    RoyalFamilyTree tree;
+    tree.loadFromCSV("family.csv");
+
+    tree.showSuccessionLine();
+    tree.assignNewKing();
+
+    return 0;
+}
