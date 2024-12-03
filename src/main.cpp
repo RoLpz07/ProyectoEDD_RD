@@ -24,3 +24,25 @@ struct Person {
           id_father(_id_father), is_dead(_is_dead), was_king(_was_king),
           is_king(_is_king), left(nullptr), right(nullptr) {}
 };
+
+class RoyalFamilyTree {
+private:
+    Person* root;
+
+    void insert(Person*& current, Person* newPerson) {
+        if (current == nullptr) {
+            current = newPerson;
+            return;
+        }
+        if (current->id == newPerson->id_father) {
+            if (current->left == nullptr) {
+                current->left = newPerson;
+            } else if (current->right == nullptr) {
+                current->right = newPerson;
+            }
+        } else {
+            insert(current->left, newPerson);
+            insert(current->right, newPerson);
+        }
+    }
+    
