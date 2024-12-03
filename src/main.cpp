@@ -132,4 +132,25 @@ public:
         cout << "Línea de sucesión actual:" << endl;
         showLineOfSuccession(root);
     }
-    
+
+    void assignNewKing() {
+        Person* currentKing = findCurrentKing(root);
+        if (currentKing == nullptr) {
+            cout << "No hay rey actual." << endl;
+            return;
+        }
+
+        if (currentKing->is_dead) {
+            Person* successor = findSuccessor(currentKing->left);
+            if (!successor) successor = findSuccessor(currentKing->right);
+            if (successor) {
+                successor->is_king = true;
+                cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
+            } else {
+                cout << "No se encontró sucesor válido." << endl;
+            }
+        } else {
+            cout << "El rey actual está vivo: " << currentKing->name << " " << currentKing->last_name << endl;
+        }
+    }
+};
