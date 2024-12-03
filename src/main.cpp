@@ -62,3 +62,12 @@ private:
         return successor;
     }
     
+    void showLineOfSuccession(Person* current) {
+        if (current == nullptr) return;
+        if (!current->is_dead) {
+            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
+        }
+        showLineOfSuccession(current->left);
+        showLineOfSuccession(current->right);
+    }
+    
