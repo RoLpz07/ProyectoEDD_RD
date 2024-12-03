@@ -127,3 +127,9 @@ public:
 
         file.close();
     }
+
+    void showSuccessionLine() {
+        cout << "Línea de sucesión actual:" << endl;
+        showLineOfSuccession(root);
+    }
+    
