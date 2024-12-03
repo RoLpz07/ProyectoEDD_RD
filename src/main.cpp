@@ -46,3 +46,11 @@ private:
         }
     }
     
+    Person* findCurrentKing(Person* current) {
+        if (current == nullptr) return nullptr;
+        if (current->is_king) return current;
+        Person* king = findCurrentKing(current->left);
+        if (king == nullptr) king = findCurrentKing(current->right);
+        return king;
+    }
+    
