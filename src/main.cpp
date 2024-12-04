@@ -93,7 +93,7 @@ public:
         }
 
         string line;
-        getline(file, line);
+        getline(file, line); // Leer la cabecera
 
         while (getline(file, line)) {
             stringstream ss(line);
@@ -123,6 +123,7 @@ public:
 
             Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
             insert(root, newPerson);
+            cout << "Inserted: " << name << " " << last_name << endl; // Mensaje de depuración
         }
 
         file.close();
@@ -157,7 +158,7 @@ public:
 
 int main() {
     RoyalFamilyTree tree;
-    tree.loadFromCSV("family.csv");
+    tree.loadFromCSV("royal_family.csv");
 
     tree.showSuccessionLine();
     tree.assignNewKing();
