@@ -39,43 +39,17 @@ private:
                 current->left = newPerson;
             } else if (current->right == nullptr) {
                 current->right = newPerson;
+            } else {
+                insert(current->left, newPerson);
             }
         } else {
-            insert(current->left, newPerson);
-            insert(current->right, newPerson);
+            if (current->left != nullptr) {
+                insert(current->left, newPerson);
+            }
+            if (current->right != nullptr) {
+                insert(current->right, newPerson);
+            }
         }
-    }
-    
-    Person* findCurrentKing(Person* current) {
-        if (current == nullptr) return nullptr;
-        if (current->is_king) return current;
-        Person* king = findCurrentKing(current->left);
-        if (king == nullptr) king = findCurrentKing(current->right);
-        return king;
-    }
-    
-    Person* findSuccessor(Person* current) {
-        if (current == nullptr) return nullptr;
-        if (!current->is_dead) return current;
-        Person* successor = findSuccessor(current->left);
-        if (successor == nullptr) successor = findSuccessor(current->right);
-        return successor;
-    }
-    
-    void showLineOfSuccession(Person* current) {
-        if (current == nullptr) return;
-        if (!current->is_dead) {
-            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
-        }
-        showLineOfSuccession(current->left);
-        showLineOfSuccession(current->right);
-    }
-
-    void deleteTree(Person* current) {
-        if (current == nullptr) return;
-        deleteTree(current->left);
-        deleteTree(current->right);
-        delete current;
     }
 
 public:
@@ -84,7 +58,7 @@ public:
     ~RoyalFamilyTree() {
         deleteTree(root);
     }
-    
+
     void loadFromCSV(const string& filename) {
         ifstream file(filename);
         if (!file.is_open()) {
@@ -95,6 +69,7 @@ public:
         string line;
         getline(file, line); // Leer la cabecera
 
+        int count = 0;
         while (getline(file, line)) {
             stringstream ss(line);
             string field;
@@ -122,10 +97,13 @@ public:
             is_king = stoi(field);
 
             Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
+            cout << "Insertando: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ")" << endl;
             insert(root, newPerson);
-            cout << "Inserted: " << name << " " << last_name << endl; // Mensaje de depuración
+            cout << "Persona insertada: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ")" << endl;
+            count++;
         }
 
+        cout << "Total members inserted: " << count << endl;
         file.close();
     }
 
@@ -153,6 +131,39 @@ public:
         } else {
             cout << "El rey actual está vivo: " << currentKing->name << " " << currentKing->last_name << endl;
         }
+    }
+
+private:
+    void deleteTree(Person* current) {
+        if (current == nullptr) return;
+        deleteTree(current->left);
+        deleteTree(current->right);
+        delete current;
+    }
+
+    Person* findCurrentKing(Person* current) {
+        if (current == nullptr) return nullptr;
+        if (current->is_king) return current;
+        Person* king = findCurrentKing(current->left);
+        if (king == nullptr) king = findCurrentKing(current->right);
+        return king;
+    }
+
+    Person* findSuccessor(Person* current) {
+        if (current == nullptr) return nullptr;
+        if (!current->is_dead) return current;
+        Person* successor = findSuccessor(current->left);
+        if (successor == nullptr) successor = findSuccessor(current->right);
+        return successor;
+    }
+
+    void showLineOfSuccession(Person* current) {
+        if (current == nullptr) return;
+        if (!current->is_dead) {
+            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
+        }
+        showLineOfSuccession(current->left);
+        showLineOfSuccession(current->right);
     }
 };
 
