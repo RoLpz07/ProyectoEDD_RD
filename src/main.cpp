@@ -29,29 +29,40 @@ class RoyalFamilyTree {
 private:
     Person* root;
 
-    void insert(Person*& current, Person* newPerson) {
+ bool insert(Person*& current, Person* newPerson) {
         if (current == nullptr) {
             current = newPerson;
-            return;
+            cout << "Inserted at root: " << newPerson->name << " " << newPerson->last_name << endl;
+            return true;
         }
+
         if (current->id == newPerson->id_father) {
             if (current->left == nullptr) {
                 current->left = newPerson;
-            } else if (current->right == nullptr) {
-                current->right = newPerson;
+                cout << "Inserted as left child of " << current->name << " " << current->last_name << ": " << newPerson->name << " " << newPerson->last_name << endl;
             } else {
-                insert(current->left, newPerson);
+                Person* child = current->left;
+                while (child->right != nullptr) {
+                    child = child->right;
+                }
+                child->right = newPerson;
+                cout << "Inserted as right child of " << current->name << " " << current->last_name << ": " << newPerson->name << " " << newPerson->last_name << endl;
             }
-        } else {
-            if (current->left != nullptr) {
-                insert(current->left, newPerson);
-            }
-            if (current->right != nullptr) {
-                insert(current->right, newPerson);
-            }
+            return true;
         }
-    }
 
+        bool inserted = false;
+        if (current->left != nullptr) {
+            inserted = insert(current->left, newPerson);
+        }
+        if (!inserted && current->right != nullptr) {
+            inserted = insert(current->right, newPerson);
+        }
+
+        return inserted;
+    
+
+}
 public:
     RoyalFamilyTree() : root(nullptr) {}
 
@@ -60,50 +71,50 @@ public:
     }
 
     void loadFromCSV(const string& filename) {
-        ifstream file(filename);
-        if (!file.is_open()) {
-            cerr << "Error al abrir el archivo." << endl;
-            return;
-        }
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error al abrir el archivo." << endl;
+        return;
+    }
 
-        string line;
-        getline(file, line); 
+    string line;
+    getline(file, line); 
 
-        int count = 0;
-        while (getline(file, line)) {
-            stringstream ss(line);
-            string field;
+    int count = 0;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string field;
 
-            int id, age, id_father;
-            char gender;
-            bool is_dead, was_king, is_king;
-            string name, last_name;
+        int id, age, id_father;
+        char gender;
+        bool is_dead, was_king, is_king;
+        string name, last_name;
 
-            getline(ss, field, ',');
-            id = stoi(field);
-            getline(ss, name, ',');
-            getline(ss, last_name, ',');
-            getline(ss, field, ',');
-            gender = field[0];
-            getline(ss, field, ',');
-            age = stoi(field);
-            getline(ss, field, ',');
-            id_father = stoi(field);
-            getline(ss, field, ',');
-            is_dead = stoi(field);
-            getline(ss, field, ',');
-            was_king = stoi(field);
-            getline(ss, field, ',');
-            is_king = stoi(field);
+        getline(ss, field, ',');
+        id = stoi(field);
+        getline(ss, name, ',');
+        getline(ss, last_name, ',');
+        getline(ss, field, ',');
+        gender = field[0];
+        getline(ss, field, ',');
+        age = stoi(field);
+        getline(ss, field, ',');
+        id_father = stoi(field);
+        getline(ss, field, ',');
+        is_dead = stoi(field);
+        getline(ss, field, ',');
+        was_king = stoi(field);
+        getline(ss, field, ',');
+        is_king = stoi(field);
 
-            Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
-            cout << "Insertando: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ", is_dead: " << newPerson->is_dead << ")" << endl;
-            insert(root, newPerson);
-            count++;
-        }
+        Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
+        cout << "Insertando: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ", is_dead: " << newPerson->is_dead << ")" << endl;
+        insert(root, newPerson);
+        count++;
+    }
 
-        cout << "Total members inserted: " << count << endl;
-        file.close();
+    cout << "Total members inserted: " << count << endl;
+    file.close();
     }
 
     void showLivingMembers() {
@@ -112,18 +123,18 @@ public:
     }
 
     void showLivingMembers(Person* current) {
-        if (current == nullptr) return;
-        if (!current->is_dead) {
-            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
-        }
-        showLivingMembers(current->left);
-        showLivingMembers(current->right);
+    if (current == nullptr) return;
+    if (!current->is_dead) {
+        cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
+    }
+    showLivingMembers(current->left);
+    showLivingMembers(current->right);
     }
 
     void showCurrentKingAndSuccessor() {
         Person* currentKing = findCurrentKing(root);
         if (currentKing == nullptr) {
-            cout << "No hay rey actual." << endl;
+            cout << "No hay rey actualmente." << endl;
             return;
         }
         cout << "Rey actual: " << currentKing->name << " " << currentKing->last_name << endl;
@@ -132,7 +143,7 @@ public:
         if (successor) {
             cout << "Sucesor: " << successor->name << " " << successor->last_name << endl;
         } else {
-            cout << "No se encontró sucesor válido." << endl;
+            cout << "No se encontró sucesor válido en la rama actual." << endl;
         }
     }
 
