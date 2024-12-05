@@ -106,17 +106,6 @@ public:
         file.close();
     }
 
-    void showAllMembers() {
-        cout << "Lista de todos los familiares:" << endl;
-        showAllMembers(root);
-    }
-
-    void showAllMembers(Person* current) {
-        if (current == nullptr) return;
-        cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
-        showAllMembers(current->left);
-        showAllMembers(current->right);
-    }
 
     void showLivingMembers() {
         cout << "Lista de familiares vivos:" << endl;
@@ -132,19 +121,7 @@ public:
         showLivingMembers(current->right);
     }
 
-    void showDeceasedMembers() {
-        cout << "Lista de familiares muertos:" << endl;
-        showDeceasedMembers(root);
-    }
 
-    void showDeceasedMembers(Person* current) {
-        if (current == nullptr) return;
-        if (current->is_dead) {
-            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
-        }
-        showDeceasedMembers(current->left);
-        showDeceasedMembers(current->right);
-    }
 
     void showCurrentKingAndSuccessor() {
         Person* currentKing = findCurrentKing(root);
@@ -169,11 +146,9 @@ public:
             return;
         }
         currentKing->is_dead = true;
-        currentKing->is_king = false; 
         cout << "El rey " << currentKing->name << " " << currentKing->last_name << " ha sido asesinado." << endl;
         assignNewKing();
     }
-
     void assignNewKing() {
         Person* currentKing = findCurrentKing(root);
         if (currentKing == nullptr) {
@@ -182,11 +157,20 @@ public:
         }
 
         if (currentKing->is_dead || currentKing->age > 70) {
+            currentKing->is_king = false;
             Person* successor = findSuccessor(currentKing->left);
             if (!successor) successor = findSuccessor(currentKing->right);
             if (successor) {
                 successor->is_king = true;
                 cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
+           
+                Person* nextSuccessor = findSuccessor(successor->left);
+                if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
+                if (nextSuccessor) {
+                    cout << "Siguiente sucesor: " << nextSuccessor->name << " " << nextSuccessor->last_name << endl;
+                } else {
+                    cout << "No se encontró siguiente sucesor válido." << endl;
+                }
             } else {
                 
                 Person* uncle = findUncle(currentKing);
@@ -196,11 +180,27 @@ public:
                     if (successor) {
                         successor->is_king = true;
                         cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
+   
+                        Person* nextSuccessor = findSuccessor(successor->left);
+                        if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
+                        if (nextSuccessor) {
+                            cout << "Siguiente sucesor: " << nextSuccessor->name << " " << nextSuccessor->last_name << endl;
+                        } else {
+                            cout << "No se encontró siguiente sucesor válido." << endl;
+                        }
                     } else if (!uncle->is_dead) {
                         uncle->is_king = true;
                         cout << "Nuevo rey asignado: " << uncle->name << " " << uncle->last_name << endl;
+                 
+                        Person* nextSuccessor = findSuccessor(uncle->left);
+                        if (!nextSuccessor) nextSuccessor = findSuccessor(uncle->right);
+                        if (nextSuccessor) {
+                            cout << "Siguiente sucesor: " << nextSuccessor->name << " " << nextSuccessor->last_name << endl;
+                        } else {
+                            cout << "No se encontró siguiente sucesor válido." << endl;
+                        }
                     } else {
-                        // Buscar en el árbol del tío
+                     
                         Person* ancestor = findAncestorWithTwoChildren(currentKing);
                         if (ancestor) {
                             successor = findSuccessor(ancestor->left);
@@ -208,6 +208,14 @@ public:
                             if (successor) {
                                 successor->is_king = true;
                                 cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
+                             
+                                Person* nextSuccessor = findSuccessor(successor->left);
+                                if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
+                                if (nextSuccessor) {
+                                    cout << "Siguiente sucesor: " << nextSuccessor->name << " " << nextSuccessor->last_name << endl;
+                                } else {
+                                    cout << "No se encontró siguiente sucesor válido." << endl;
+                                }
                             } else {
                                 cout << "No se encontró sucesor válido." << endl;
                             }
@@ -223,7 +231,6 @@ public:
             cout << "El rey actual está vivo: " << currentKing->name << " " << currentKing->last_name << endl;
         }
     }
-
 private:
     void deleteTree(Person* current) {
         if (current == nullptr) return;
@@ -231,7 +238,7 @@ private:
         deleteTree(current->right);
         delete current;
     }
-
+   
     Person* findCurrentKing(Person* current) {
         if (current == nullptr) return nullptr;
         if (current->is_king) return current;
@@ -285,33 +292,24 @@ int main() {
     int choice;
     do {
         cout << "\nMenú:\n";
-        cout << "1. Imprimir toda la lista de familiares\n";
-        cout << "2. Imprimir solo los vivos\n";
-        cout << "3. Imprimir solo los muertos\n";
-        cout << "4. Imprimir rey actual y sucesor\n";
-        cout << "5. Asesinar al rey y pasar corona\n";
-        cout << "6. Salir\n";
+        cout << "1. Imprimir linea de sucesion actual \n";
+        cout << "2. Imprimir rey actual y sucesor\n";
+        cout << "3. Asesinar al rey y pasar corona\n";
+        cout << "4. Salir\n";
         cout << "Elija una opción: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
-                tree.showAllMembers();
-                break;
-            case 2:
                 tree.showLivingMembers();
                 break;
-            case 3:
-                tree.showDeceasedMembers();
-                break;
-            case 4:
+            case 2:
                 tree.showCurrentKingAndSuccessor();
                 break;
-            case 5:
+            case 3:
                 tree.assassinateKing();
-                tree.assignNewKing();
                 break;
-            case 6:
+            case 4:
                 cout << "Saliendo..." << endl;
                 break;
             default:
