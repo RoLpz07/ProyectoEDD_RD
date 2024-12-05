@@ -67,7 +67,7 @@ public:
         }
 
         string line;
-        getline(file, line); // Leer la cabecera
+        getline(file, line); 
 
         int count = 0;
         while (getline(file, line)) {
@@ -169,7 +169,7 @@ public:
             return;
         }
         currentKing->is_dead = true;
-        currentKing->is_king = false; // Asegurarse de que el rey actual ya no sea rey
+        currentKing->is_king = false; 
         cout << "El rey " << currentKing->name << " " << currentKing->last_name << " ha sido asesinado." << endl;
         assignNewKing();
     }
@@ -188,7 +188,7 @@ public:
                 successor->is_king = true;
                 cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
             } else {
-                // Buscar en el árbol del hermano
+                
                 Person* uncle = findUncle(currentKing);
                 if (uncle) {
                     successor = findSuccessor(uncle->left);
@@ -309,6 +309,7 @@ int main() {
                 break;
             case 5:
                 tree.assassinateKing();
+                tree.assignNewKing();
                 break;
             case 6:
                 cout << "Saliendo..." << endl;
