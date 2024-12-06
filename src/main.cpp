@@ -29,7 +29,7 @@ class RoyalFamilyTree {
 private:
     Person* root;
 
- bool insert(Person*& current, Person* newPerson) {
+    bool insert(Person*& current, Person* newPerson) {
         if (current == nullptr) {
             current = newPerson;
             cout << "Inserted at root: " << newPerson->name << " " << newPerson->last_name << endl;
@@ -60,9 +60,8 @@ private:
         }
 
         return inserted;
-    
+    }
 
-}
 public:
     RoyalFamilyTree() : root(nullptr) {}
 
@@ -71,50 +70,50 @@ public:
     }
 
     void loadFromCSV(const string& filename) {
-    ifstream file(filename);
-    if (!file.is_open()) {
-        cerr << "Error al abrir el archivo." << endl;
-        return;
-    }
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error al abrir el archivo." << endl;
+            return;
+        }
 
-    string line;
-    getline(file, line); 
+        string line;
+        getline(file, line); // Leer la cabecera
 
-    int count = 0;
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string field;
+        int count = 0;
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string field;
 
-        int id, age, id_father;
-        char gender;
-        bool is_dead, was_king, is_king;
-        string name, last_name;
+            int id, age, id_father;
+            char gender;
+            bool is_dead, was_king, is_king;
+            string name, last_name;
 
-        getline(ss, field, ',');
-        id = stoi(field);
-        getline(ss, name, ',');
-        getline(ss, last_name, ',');
-        getline(ss, field, ',');
-        gender = field[0];
-        getline(ss, field, ',');
-        age = stoi(field);
-        getline(ss, field, ',');
-        id_father = stoi(field);
-        getline(ss, field, ',');
-        is_dead = stoi(field);
-        getline(ss, field, ',');
-        was_king = stoi(field);
-        getline(ss, field, ',');
-        is_king = stoi(field);
+            getline(ss, field, ',');
+            id = stoi(field);
+            getline(ss, name, ',');
+            getline(ss, last_name, ',');
+            getline(ss, field, ',');
+            gender = field[0];
+            getline(ss, field, ',');
+            age = stoi(field);
+            getline(ss, field, ',');
+            id_father = stoi(field);
+            getline(ss, field, ',');
+            is_dead = stoi(field);
+            getline(ss, field, ',');
+            was_king = stoi(field);
+            getline(ss, field, ',');
+            is_king = stoi(field);
 
-        Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
-        cout << "Insertando: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ", is_dead: " << newPerson->is_dead << ")" << endl;
-        insert(root, newPerson);
-        count++;
-    }
+            Person* newPerson = new Person(id, name, last_name, gender, age, id_father, is_dead, was_king, is_king);
+            cout << "Insertando: " << newPerson->name << " " << newPerson->last_name << " (ID: " << newPerson->id << ", is_dead: " << newPerson->is_dead << ")" << endl;
+            insert(root, newPerson);
+            count++;
+        }
 
-    cout << "Total members inserted: " << count << endl;
-    file.close();
+        cout << "Total members inserted: " << count << endl;
+        file.close();
     }
 
     void showLivingMembers() {
@@ -123,12 +122,12 @@ public:
     }
 
     void showLivingMembers(Person* current) {
-    if (current == nullptr) return;
-    if (!current->is_dead) {
-        cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
-    }
-    showLivingMembers(current->left);
-    showLivingMembers(current->right);
+        if (current == nullptr) return;
+        if (!current->is_dead) {
+            cout << current->name << " " << current->last_name << " (ID: " << current->id << ")" << endl;
+        }
+        showLivingMembers(current->left);
+        showLivingMembers(current->right);
     }
 
     void showCurrentKingAndSuccessor() {
@@ -172,7 +171,7 @@ public:
             if (successor) {
                 successor->is_king = true;
                 cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
-           
+
                 Person* nextSuccessor = findSuccessor(successor->left);
                 if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
                 if (nextSuccessor) {
@@ -181,7 +180,6 @@ public:
                     cout << "No se encontró siguiente sucesor válido." << endl;
                 }
             } else {
-                
                 Person* uncle = findUncle(currentKing);
                 if (uncle) {
                     successor = findSuccessor(uncle->left);
@@ -189,7 +187,7 @@ public:
                     if (successor) {
                         successor->is_king = true;
                         cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
-   
+
                         Person* nextSuccessor = findSuccessor(successor->left);
                         if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
                         if (nextSuccessor) {
@@ -200,7 +198,7 @@ public:
                     } else if (!uncle->is_dead) {
                         uncle->is_king = true;
                         cout << "Nuevo rey asignado: " << uncle->name << " " << uncle->last_name << endl;
-                 
+
                         Person* nextSuccessor = findSuccessor(uncle->left);
                         if (!nextSuccessor) nextSuccessor = findSuccessor(uncle->right);
                         if (nextSuccessor) {
@@ -209,7 +207,6 @@ public:
                             cout << "No se encontró siguiente sucesor válido." << endl;
                         }
                     } else {
-                     
                         Person* ancestor = findAncestorWithTwoChildren(currentKing);
                         if (ancestor) {
                             successor = findSuccessor(ancestor->left);
@@ -217,7 +214,7 @@ public:
                             if (successor) {
                                 successor->is_king = true;
                                 cout << "Nuevo rey asignado: " << successor->name << " " << successor->last_name << endl;
-                             
+
                                 Person* nextSuccessor = findSuccessor(successor->left);
                                 if (!nextSuccessor) nextSuccessor = findSuccessor(successor->right);
                                 if (nextSuccessor) {
@@ -256,6 +253,7 @@ public:
         printAllMembers(current->right);
     }
 
+   
 private:
     void deleteTree(Person* current) {
         if (current == nullptr) return;
@@ -263,7 +261,7 @@ private:
         deleteTree(current->right);
         delete current;
     }
-   
+
     Person* findCurrentKing(Person* current) {
         if (current == nullptr) return nullptr;
         if (current->is_king) return current;
@@ -344,7 +342,7 @@ int main() {
             default:
                 cout << "Opción no válida. Intente de nuevo." << endl;
         }
-    } while (choice != 5);
+    } while (choice != 6);
 
     return 0;
 }
