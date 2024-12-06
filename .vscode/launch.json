@@ -8,8 +8,13 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
+<<<<<<< HEAD
       "cwd": "c:/Users/Ronal/Desktop/uru/E.D.D/Proyeto/ProyectoEDD_RD",
       "program": "c:/Users/Ronal/Desktop/uru/E.D.D/Proyeto/ProyectoEDD_RD/build/Debug/outDebug",
+=======
+      "cwd": "c:/Users/Ronal/Desktop/uru/E.D.D/Proyeto/ProyectoEDD_RD/src",
+      "program": "c:/Users/Ronal/Desktop/uru/E.D.D/Proyeto/ProyectoEDD_RD/src/build/Debug/outDebug",
+>>>>>>> origin/develop
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
